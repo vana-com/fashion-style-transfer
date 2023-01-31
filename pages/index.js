@@ -25,28 +25,28 @@ export default function Home() {
   const [prediction, setPrediction] = useState(null);
   const [error, setError] = useState(null);
 
-  //Image-to-Text State
+  // Image-to-Text State
   const [imageUrl, setImageUrl] = useState(null);
-  const [imageText, setTextOfImage] = useState("");
+  const [imageText, setImageText] = useState("");
+
   // Text-to-Image State
-  const [prompt, setPrompt] = useState("");
+  // const [prompt, setPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [generatedImages, setGeneratedImages] = useState([])
+  const prompt = imageText ? `a portrait of {target_token} in the style of ${imageText}` : 'Prompt not ready'
 
   const callTextToImageAPI = async (event) => {
     event.preventDefault();
     setIsLoading(true);
 
     try {
-      await vanaApiPost(`jobs/text-to-image`, {
-        prompt: imageText.replace(/\bme\b/i, "{target_token}"), // Replace the word "me" with "{target_token}" in the prompt to include yourself in the picture
-        exhibit_name: "text-to-image", // How your images are grouped in your gallery. For this demo, all images will be grouped in the `text-to-image` exhibit
-        n_samples: 5,
-        seed: -1, // The inference seed: A non-negative integer fixes inference so inference on the same (model, prompt) produces the same output
+      console.log('About to call API')
+      const urls = await vanaApiPost(`images/generations`, {
+        prompt: prompt,
+        n: 4,
       });
-      alert(
-        "Successfully submitted prompt. New images will appear in about 7 minutes."
-      );
+      setGeneratedImages(urls)
     } catch (error) {
       setErrorMessage("An error occurred while generating the image");
     }
@@ -63,9 +63,10 @@ export default function Home() {
       },
       body: JSON.stringify({
         inputs: {
+          // clip_model_name: "ViT-H-14/laion2b_s32b_b79k",
           clip_model_name: "ViT-L-14/openai",
           image: images[0].fileUrl,
-          mode: "best",
+          mode: "fast",
         },
       }),
     });
@@ -87,13 +88,13 @@ export default function Home() {
       }
       setPrediction(prediction);
     }
-    setTextOfImage(multi.output);
+    setImageText(multi.output);
   };
 
   return (
     <>
       <Head>
-        <title>Vana MIT Hackathon</title>
+        <title>Portraits from Images</title>
         <meta name="description" content="Vana MIT Hackathon" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
@@ -118,7 +119,7 @@ export default function Home() {
                 >
                   {({ onClick }) => (
                     <button className="image-upload" onClick={onClick}>
-                      Upload a file...
+                      Upload an image to mix with your portrait...
                     </button>
                   )}
                 </UploadButton>
@@ -146,7 +147,7 @@ export default function Home() {
                     <label htmlFor="prompt-input">Prompt:</label>
                     <div className="image-prompt">
                       {prediction && prediction.status === "succeeded"
-                        ? `me ${imageText}`
+                        ? `${prompt}`
                         : "Loading..."}
                     </div>
                     <form onSubmit={callTextToImageAPI}>
@@ -159,18 +160,12 @@ export default function Home() {
                 {isLoading && <p>Loading...</p>}
                 {errorMessage && <p>Error: {errorMessage}</p>}
 
-                <div>
-                  <p>
-                    Tip: make sure to include the word "me" in your prompt to
-                    include your face
-                  </p>
-                </div>
               </div>
 
               {/** Show the images a user has created */}
               <div className="pt-1 space-y-4">
-                {user?.textToImage?.map((image, i) => (
-                  <img src={image} key={i} className="w-full" />
+                {generatedImages?.data?.map((image, i) => (
+                  <img src={image.url} key={i} className="w-full" />
                 ))}
               </div>
             </div>
