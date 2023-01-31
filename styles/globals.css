@@ -209,3 +209,29 @@ button:hover {
 .error:first-letter {
   text-transform: uppercase;
 }
+
+.image-upload {
+  margin-bottom: 1rem;
+}
+
+.uploaded-image-detail {
+  margin: 20px 0;
+}
+
+.uploaded-image-detail .caption,
+.space-y-4 label {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  color: #5e5e5e;
+}
+
+.space-y-4 label {
+  margin-bottom: 4px;
+}
+
+.uploaded-image-detail .description {
+  font-size: 1rem;
+  font-weight: 500;
+  color: rgb(49, 49, 49);
+}

@@ -4,6 +4,19 @@ const { VANA_API_URL } = require("./config");
 const nextConfig = {
   reactStrictMode: true,
   rewrites: rewritesApi,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "replicate.com",
+      },
+      {
+        protocol: "https",
+        port: "",
+        hostname: "replicate.delivery",
+      },
+    ],
+  },
 };
 
 function rewritesApi() {

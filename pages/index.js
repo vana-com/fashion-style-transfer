@@ -3,6 +3,16 @@ import Head from "next/head";
 import { GithubIcon } from "components/icons/GithubIcon";
 import { vanaApiPost } from "vanaApi";
 import { LoginHandler } from "components/auth/LoginHandler";
+import { Uploader } from "uploader";
+import { UploadButton } from "react-uploader";
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+const uploader = Uploader({
+  apiKey: "free",
+});
+
+const options = { multi: false };
 
 export default function Home() {
   // User State
@@ -12,6 +22,12 @@ export default function Home() {
     textToImage: [],
   });
 
+  const [prediction, setPrediction] = useState(null);
+  const [error, setError] = useState(null);
+
+  //Image-to-Text State
+  const [imageUrl, setImageUrl] = useState(null);
+  const [imageText, setTextOfImage] = useState("");
   // Text-to-Image State
   const [prompt, setPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -23,7 +39,7 @@ export default function Home() {
 
     try {
       await vanaApiPost(`jobs/text-to-image`, {
-        prompt: prompt.replace(/\bme\b/i, "{target_token}"), // Replace the word "me" with "{target_token}" in the prompt to include yourself in the picture
+        prompt: imageText.replace(/\bme\b/i, "{target_token}"), // Replace the word "me" with "{target_token}" in the prompt to include yourself in the picture
         exhibit_name: "text-to-image", // How your images are grouped in your gallery. For this demo, all images will be grouped in the `text-to-image` exhibit
         n_samples: 5,
         seed: -1, // The inference seed: A non-negative integer fixes inference so inference on the same (model, prompt) produces the same output
@@ -36,6 +52,42 @@ export default function Home() {
     }
 
     setIsLoading(false);
+  };
+
+  const handleComplete = async (images) => {
+    setImageUrl(images[0].fileUrl);
+    const response = await fetch("/api/predictions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        inputs: {
+          clip_model_name: "ViT-L-14/openai",
+          image: images[0].fileUrl,
+          mode: "best",
+        },
+      }),
+    });
+    let multi = await response.json();
+    setPrediction(multi);
+    const predictionId = multi.uuid;
+    if (response.status !== 201) {
+      setError(multi.detail);
+      return;
+    }
+    while (multi.status !== "succeeded" && multi.status !== "failed") {
+      await sleep(1000);
+      const response = await fetch("/api/predictions/" + predictionId);
+      const { prediction } = await response.json();
+      multi = prediction;
+      if (response.status !== 200) {
+        setError(multi.detail);
+        return;
+      }
+      setPrediction(prediction);
+    }
+    setTextOfImage(multi.output);
   };
 
   return (
@@ -58,18 +110,50 @@ export default function Home() {
         <LoginHandler setUser={setUser}>
           {user.exhibits.length > 0 && (
             <div className="content container">
+              <div className="image-uploader-form">
+                <UploadButton
+                  uploader={uploader}
+                  options={options}
+                  onComplete={handleComplete}
+                >
+                  {({ onClick }) => (
+                    <button className="image-upload" onClick={onClick}>
+                      Upload a file...
+                    </button>
+                  )}
+                </UploadButton>
+                <div className="image-viewer">
+                  {imageUrl && (
+                    <>
+                      <img src={imageUrl} alt="Uploaded Image" />
+                      <div className="uploaded-image-detail">
+                        <div className="caption">
+                          Uploaded Image Description
+                        </div>
+                        <div className="description">
+                          {prediction && prediction.status === "succeeded"
+                            ? imageText
+                            : "Loading..."}
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
               <div className="space-y-4">
-                <label htmlFor="prompt-input">Prompt:</label>
-                <form onSubmit={callTextToImageAPI}>
-                  <input
-                    id="prompt-input"
-                    type="text"
-                    placeholder="Me eating blue spaghetti"
-                    value={prompt}
-                    onChange={(event) => setPrompt(event.target.value)}
-                  />
-                  <button type="submit">Generate image</button>
-                </form>
+                {imageText && (
+                  <>
+                    <label htmlFor="prompt-input">Prompt:</label>
+                    <div className="image-prompt">
+                      {prediction && prediction.status === "succeeded"
+                        ? `me ${imageText}`
+                        : "Loading..."}
+                    </div>
+                    <form onSubmit={callTextToImageAPI}>
+                      <button type="submit">Generate image</button>
+                    </form>
+                  </>
+                )}
                 <div>Credit balance: {user?.balance ?? 0}</div>
 
                 {isLoading && <p>Loading...</p>}
