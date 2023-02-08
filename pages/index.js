@@ -20,23 +20,23 @@ export default function Home() {
     balance: 0,
     exhibits: [],
     textToImage: [],
+    loggedIn: false,
   });
 
   const [prediction, setPrediction] = useState(null);
   const [error, setError] = useState(null);
 
-  // Image-to-Text State
+  // Image Caption State
   const [imageUrl, setImageUrl] = useState(null);
-  const [imageText, setImageText] = useState("");
+  const [imageCaption, setImageCaption] = useState("test");
+  const prompt = imageCaption ? `a portrait of {target_token} in the style of ${imageCaption}` : 'Prompt not ready'
 
-  // Text-to-Image State
-  // const [prompt, setPrompt] = useState("");
+  // Generating Image State
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [generatedImages, setGeneratedImages] = useState([])
-  const prompt = imageText ? `a portrait of {target_token} in the style of ${imageText}` : 'Prompt not ready'
 
-  const callTextToImageAPI = async (event) => {
+  const generatePersonalizedImages = async (event) => {
     event.preventDefault();
     setIsLoading(true);
 
@@ -54,7 +54,7 @@ export default function Home() {
     setIsLoading(false);
   };
 
-  const handleComplete = async (images) => {
+  const getImageCaption = async (images) => {
     setImageUrl(images[0].fileUrl);
     const response = await fetch("/api/predictions", {
       method: "POST",
@@ -63,7 +63,8 @@ export default function Home() {
       },
       body: JSON.stringify({
         inputs: {
-          // clip_model_name: "ViT-H-14/laion2b_s32b_b79k",
+          // We could also try using the LAION clip model but the
+          // openai one seemed to produce prompts for better images
           clip_model_name: "ViT-L-14/openai",
           image: images[0].fileUrl,
           mode: "fast",
@@ -88,97 +89,149 @@ export default function Home() {
       }
       setPrediction(prediction);
     }
-    setImageText(multi.output);
+    setImageCaption(multi.output);
+  };
+
+  // TODO: use this to call vanilla stable diffusion
+  const generateNonPersonalizedImages = async (prompt) => {
+
+    // TODO: THIS DOES NOT WORK RIGHT NOW
+    const response = await fetch("/api/predictions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        inputs: {
+          prompt: 'a test image',
+        },
+      }),
+    });
+
+    console.log('response', response)
+    let prediction = await response.json();
+    console.log('prediction', prediction)
+
+    if (response.status !== 201) {
+      setError(prediction.detail);
+      return;
+    }
+    setPrediction(prediction);
+
+    while (
+      prediction.status !== "succeeded" &&
+      prediction.status !== "failed"
+    ) {
+      await sleep(1000);
+      const response = await fetch("/api/stable-diffusion/" + prediction.id);
+      prediction = await response.json();
+      if (response.status !== 200) {
+        setError(prediction.detail);
+        return;
+      }
+      setPrediction(prediction);
+
+    }
   };
 
   return (
     <>
       <Head>
         <title>Portraits from Images</title>
-        <meta name="description" content="Vana MIT Hackathon" />
+        <meta name="description" content="Face Style Transfer" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <header className="header">
         <a
-          href="https://github.com/vana-com/vana-mit-hackathon"
+          href="https://github.com/annakaz/face-style-transfer"
           target="_blank"
         >
           <GithubIcon />
         </a>
       </header>
       <main className="main">
-        <LoginHandler setUser={setUser}>
-          {user.exhibits.length > 0 && (
-            <div className="content container">
-              <div className="image-uploader-form">
-                <UploadButton
-                  uploader={uploader}
-                  options={options}
-                  onComplete={handleComplete}
-                >
-                  {({ onClick }) => (
-                    <button className="image-upload" onClick={onClick}>
-                      Upload an image to mix with your portrait...
-                    </button>
-                  )}
-                </UploadButton>
-                <div className="image-viewer">
-                  {imageUrl && (
-                    <>
-                      <img src={imageUrl} alt="Uploaded Image" />
-                      <div className="uploaded-image-detail">
-                        <div className="caption">
-                          Uploaded Image Description
-                        </div>
-                        <div className="description">
-                          {prediction && prediction.status === "succeeded"
-                            ? imageText
-                            : "Loading..."}
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-              <div className="space-y-4">
-                {imageText && (
-                  <>
-                    <label htmlFor="prompt-input">Prompt:</label>
-                    <div className="image-prompt">
+        <div className="content container">
+          <h1>Intro to Prompt Engineering</h1>
+          <h2>Upload an image to guess what prompt created it. Then, apply the prompt to create new images, with the option to make them of yourself.</h2>
+          <div className="image-uploader-form">
+            <UploadButton
+              uploader={uploader}
+              options={options}
+              onComplete={getImageCaption}
+            >
+              {({ onClick }) => (
+                <button className="image-upload" onClick={onClick}>
+                  Select image...
+                </button>
+              )}
+            </UploadButton>
+            <div className="image-viewer">
+              {imageUrl && (
+                <>
+                  <img src={imageUrl} alt="Uploaded Image" />
+                  <div className="uploaded-image-detail">
+                    <div className="caption">
+                      Uploaded Image Description:
+                    </div>
+                    <div className="description">
                       {prediction && prediction.status === "succeeded"
-                        ? `${prompt}`
+                        ? imageCaption
                         : "Loading..."}
                     </div>
-                    <form onSubmit={callTextToImageAPI}>
-                      <button type="submit">Generate image</button>
-                    </form>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+          <div className="space-y-4">
+            {imageCaption && (
+              <>
+                <label htmlFor="prompt-input">Prompt:</label>
+                <div className="image-prompt">
+                  {prediction && prediction.status === "succeeded"
+                    ? `${prompt}`
+                    : "Loading..."}
+                </div>
+                <form onSubmit={generateNonPersonalizedImages}>
+                  <button type="submit">Create Portrait of Default Person</button>
+                </form>
+                {/* Generic inference if a user hasn't connected VNA */}
+                {!user.loggedIn && (
+                  <>
+                    <LoginHandler setUser={setUser} />
                   </>
                 )}
-                <div>Credit balance: {user?.balance ?? 0}</div>
-
+                {/* Personalized inference once a user connects VNA*/}
+                {user.loggedIn && (
+                  <>
+                    <form onSubmit={generatePersonalizedImages}>
+                      <button type="submit">Create Portrait of Me</button>
+                    </form>
+                    <div>Credit balance: {user?.balance ?? 0}</div>
+                  </>
+                )}
                 {isLoading && <p>Loading...</p>}
                 {errorMessage && <p>Error: {errorMessage}</p>}
+                {/* User doesn't have a trained model*/}
+                {user.loggedIn && user.exhibits.length === 0 && (
+                  <p>
+                    Unfortunately, you haven't created a personalized Vana Portrait
+                    model yet. Go to https://portrait.vana.com/create to create one 🙂
+                  </p>
+                )}
+              </>
+            )}
 
-              </div>
+          </div>
 
-              {/** Show the images a user has created */}
-              <div className="pt-1 space-y-4">
-                {generatedImages?.data?.map((image, i) => (
-                  <img src={image.url} key={i} className="w-full" />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* User doesn't have a trained model*/}
-          {user.exhibits.length === 0 && (
-            <p>
-              Unfortunately, you haven't created a personalized Vana Portrait
-              model yet. Go to https://portrait.vana.com/create to create one 🙂
-            </p>
-          )}
-        </LoginHandler>
+          {/** Show the images a user has created */}
+          <div className="pt-1 space-y-4">
+            {generatedImages?.data?.map((image, i) => (
+              <img src={image.url} key={i} className="w-full" />
+            ))}
+          </div>
+        </div>
       </main>
     </>
   );

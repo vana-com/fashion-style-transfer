@@ -17,7 +17,6 @@ export const LoginCodeForm = ({ onLogin, onSetLoginState, loading }) => {
 
   return (
     <div className="content container">
-      <h1>Enter Verification Code</h1>
       <section className="w-full space-y-4">
         <form onSubmit={handleSubmit} className="relative">
           <input
@@ -29,7 +28,7 @@ export const LoginCodeForm = ({ onLogin, onSetLoginState, loading }) => {
             onInput={handleInput}
             autoComplete="off"
           />
-          <button type="submit">{loading ? "Sending…" : "Login"}</button>
+          <button type="submit">{loading ? "Sending…" : "Connect VNA"}</button>
         </form>
         <p className="description">
           <a onClick={() => onSetLoginState("emailInput")} href="#">

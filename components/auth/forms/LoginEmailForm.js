@@ -17,13 +17,12 @@ export const LoginEmailForm = ({ onGetCode, onSetLoginState, loading }) => {
 
   return (
     <div className="content container">
-      <h1>Login with Vana</h1>
       <section className="w-full space-y-4">
         <form onSubmit={handleSubmit} className="relative">
           <input
             type="email"
             name="email"
-            placeholder="Email address"
+            placeholder="Email used with your VNA account"
             autoFocus={true}
             disabled={loading}
             value={input}
