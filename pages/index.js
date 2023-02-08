@@ -30,7 +30,7 @@ export default function Home() {
 
   // Image Caption State
   const [imageUrl, setImageUrl] = useState(null);
-  const [imageCaption, setImageCaption] = useState("test");
+  const [imageCaption, setImageCaption] = useState("");
   const prompt = imageCaption ? `a portrait of {target_token} in the style of ${imageCaption}` : 'Prompt not ready'
 
   // Generating Image State
@@ -159,7 +159,7 @@ export default function Home() {
       <main className="main">
         <div className="content container">
           <h1>Intro to Prompt Engineering</h1>
-          <h2>Upload an image to guess what prompt created it. Then, apply the prompt to create new images, with the option to make them of yourself.</h2>
+          <h2>Upload an image to reverse engineer the prompt created it. Then apply the prompt to create new images, with the option to make them of yourself.</h2>
           <div className="image-uploader-form">
             <UploadButton
               uploader={uploader}
