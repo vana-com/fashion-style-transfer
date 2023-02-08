@@ -1,12 +1,11 @@
 export const StartLogin = ({ onSetLoginState }) => {
   return (
-    <div className="content container">
       <section className="w-full space-y-4">
         <button
           onClick={() => onSetLoginState("emailInput")}
-          className="primaryButton w-full"
+          // className="primaryButton w-full"
         >
-          Connect VNA
+          Connect VNA to Create Portrait of You
         </button>
         <p className="description">
           Don't have your VNA setup?{" "}
@@ -15,6 +14,5 @@ export const StartLogin = ({ onSetLoginState }) => {
           </a>
         </p>
       </section>
-    </div>
   );
 };

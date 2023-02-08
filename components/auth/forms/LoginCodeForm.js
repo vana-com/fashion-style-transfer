@@ -16,26 +16,24 @@ export const LoginCodeForm = ({ onLogin, onSetLoginState, loading }) => {
   );
 
   return (
-    <div className="content container">
-      <section className="w-full space-y-4">
-        <form onSubmit={handleSubmit} className="relative">
-          <input
-            type="text"
-            name="code"
-            placeholder="Enter 6 digit code"
-            autoFocus={true}
-            value={input}
-            onInput={handleInput}
-            autoComplete="off"
-          />
-          <button type="submit">{loading ? "Sending…" : "Connect VNA"}</button>
-        </form>
-        <p className="description">
-          <a onClick={() => onSetLoginState("emailInput")} href="#">
-            Back
-          </a>
-        </p>
-      </section>
-    </div>
+    <section className="w-full space-y-4">
+      <form onSubmit={handleSubmit} className="relative">
+        <input
+          type="text"
+          name="code"
+          placeholder="Enter 6 digit code"
+          autoFocus={true}
+          value={input}
+          onInput={handleInput}
+          autoComplete="off"
+        />
+        <button type="submit">{loading ? "Sending…" : "Connect VNA"}</button>
+      </form>
+      <p className="description">
+        <a onClick={() => onSetLoginState("emailInput")} href="#">
+          Back
+        </a>
+      </p>
+    </section>
   );
 };

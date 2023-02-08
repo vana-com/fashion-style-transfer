@@ -16,35 +16,33 @@ export const LoginEmailForm = ({ onGetCode, onSetLoginState, loading }) => {
   );
 
   return (
-    <div className="content container">
-      <section className="w-full space-y-4">
-        <form onSubmit={handleSubmit} className="relative">
-          <input
-            type="email"
-            name="email"
-            placeholder="Email used with your VNA account"
-            autoFocus={true}
-            disabled={loading}
-            value={input}
-            onInput={handleInput}
-          />
-          <button
-            type="submit"
-            disabled={loading}
-          >
-            {loading ? (
-              "Sending…"
-            ) : (
-              "Get code"
-            )}
-          </button>
-        </form>
-        <p className="description">
-          <a onClick={() => onSetLoginState("initial")} href="#">
-            Back
-          </a>
-        </p>
-      </section>
-    </div>
+    <section className="w-full space-y-4">
+      <form onSubmit={handleSubmit} className="relative">
+        <input
+          type="email"
+          name="email"
+          placeholder="Email used with your VNA account"
+          autoFocus={true}
+          disabled={loading}
+          value={input}
+          onInput={handleInput}
+        />
+        <button
+          type="submit"
+          disabled={loading}
+        >
+          {loading ? (
+            "Sending…"
+          ) : (
+            "Get code"
+          )}
+        </button>
+      </form>
+      <p className="description">
+        <a onClick={() => onSetLoginState("initial")} href="#">
+          Back
+        </a>
+      </p>
+    </section>
   );
 };
