@@ -1,6 +1,6 @@
 # Introduction
 
-A simple application for users to upload an image, capture the style of the image in a prompt, then apple that prompt to an AI model trained on their face.
+A simple application for users to upload an image, capture the style of the image in a prompt, then apply that prompt to an AI model trained on their face.
 
 # Local development
 
