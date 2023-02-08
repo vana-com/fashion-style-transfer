@@ -6,6 +6,8 @@ import { LoginHandler } from "components/auth/LoginHandler";
 import { Uploader } from "uploader";
 import { UploadButton } from "react-uploader";
 
+const DEFAULT_PERSON = "Barack Obama"
+
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const uploader = Uploader({
@@ -39,6 +41,7 @@ export default function Home() {
   const generatePersonalizedImages = async (event) => {
     event.preventDefault();
     setIsLoading(true);
+    setErrorMessage("");
 
     try {
       console.log('About to call API')
@@ -46,6 +49,7 @@ export default function Home() {
         prompt: prompt,
         n: 4,
       });
+      console.log("urls", urls)
       setGeneratedImages(urls)
     } catch (error) {
       setErrorMessage("An error occurred while generating the image");
@@ -55,6 +59,7 @@ export default function Home() {
   };
 
   const getImageCaption = async (images) => {
+    console.log('Running')
     setImageUrl(images[0].fileUrl);
     const response = await fetch("/api/predictions", {
       method: "POST",
@@ -92,46 +97,47 @@ export default function Home() {
     setImageCaption(multi.output);
   };
 
-  // TODO: use this to call vanilla stable diffusion
-  const generateNonPersonalizedImages = async (prompt) => {
+  const generateNonPersonalizedImages = async (event) => {
+    event.preventDefault();
+    setIsLoading(true);
+    setErrorMessage("");
 
-    // TODO: THIS DOES NOT WORK RIGHT NOW
-    const response = await fetch("/api/predictions", {
+    const defaultPersonPrompt = prompt.replace(/\{target_token}/g, DEFAULT_PERSON)
+    const response = await fetch("/api/stable-diffusion", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         inputs: {
-          prompt: 'a test image',
+          prompt: defaultPersonPrompt,
+          num_outputs: 4,
         },
       }),
     });
 
-    console.log('response', response)
-    let prediction = await response.json();
-    console.log('prediction', prediction)
-
+    let multi = await response.json();
+    const predictionId = multi.uuid;
     if (response.status !== 201) {
-      setError(prediction.detail);
+      setError(multi.detail);
       return;
     }
-    setPrediction(prediction);
-
-    while (
-      prediction.status !== "succeeded" &&
-      prediction.status !== "failed"
-    ) {
+    while (multi.status !== "succeeded" && multi.status !== "failed") {
       await sleep(1000);
-      const response = await fetch("/api/stable-diffusion/" + prediction.id);
-      prediction = await response.json();
+      const response = await fetch("/api/stable-diffusion/" + predictionId);
+      const { prediction } = await response.json();
+      multi = prediction;
       if (response.status !== 200) {
-        setError(prediction.detail);
+        setError(multi.detail);
         return;
       }
-      setPrediction(prediction);
-
     }
+    const formattedUrls = {
+      data: multi.output.map(imageUrl => ({url: imageUrl}))
+    }
+    setGeneratedImages(formattedUrls)
+    setIsLoading(false);
+
   };
 
   return (

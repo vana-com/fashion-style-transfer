@@ -1,6 +1,8 @@
 const API_HOST = "https://api.replicate.com";
 
 // Copied from https://github.com/replicate/inpainter
+// Very similar to /api/predictions but I didn't want to deal
+// with passing a URL around
 export default async function handler(req, res) {
   console.log('going to make prediction')
 
