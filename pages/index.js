@@ -7,6 +7,7 @@ import { Uploader } from "uploader";
 import { UploadButton } from "react-uploader";
 import Image from "next/image";
 import Scrollytelling from "components/Scrollytelling";
+import Hero from "components/Hero";
 
 const DEFAULT_PERSON = "Barack Obama";
 
@@ -163,134 +164,9 @@ export default function Home() {
         </a>
       </header> */}
       <main className="main">
-        {/* Hero */}
-        <div
-          className="h-[80vh] flex flex-col justify-center items-center bg-white"
-          style={{
-            boxShadow: "1px 1px 30px rgba(0,0,0,.25)",
-          }}
-        >
-          {/* Bold title */}
-          <h1 className="text-7xl font-bold text-center max-w-4xl mb-4">
-            A Visual Introduction to Prompt Engineering
-          </h1>
-          {/* Faint subtitle */}
-          <h2 className="text-2xl text-gray-500 text-center max-w-4xl">
-            By the team at{" "}
-            <a
-              href="https://www.vana.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-500"
-            >
-              Vana.
-            </a>
-            {/* Upload an image to reverse engineer the prompt created it. Then
-            apply the prompt to create new images, with the option to make them
-            of yourself. */}
-          </h2>
-        </div>
+        <Hero />
         <Scrollytelling />
-        {/* Title text */}
-        <div className="bg-stone-200">
-          <div className="flex flex-col gap-2 py-12 px-2">
-            <h1 className="text-5xl font-bold text-center max-w-4xl w-full mx-auto mb-4">
-              What if we could use AI's own imagination to create new images?
-            </h1>
-            <h2 className="text-2xl text-gray-500 text-center font-light max-w-4xl w-full mx-auto mb-6">
-              Enter prompt engineering.
-            </h2>
-            {/* Body text */}
-            <p className="text-lg text-gray-600 text-left leading-snug font-light max-w-2xl mx-auto w-full">
-              Prompt engineering is the process of creating a prompt that will
-              effectively guide an AI model to produce a desired output.
-            </p>
-            <p className="text-lg text-gray-600 text-left leading-snug font-light max-w-2xl mx-auto w-full">
-              Consider a simple prompt, given to a popular image generation
-              model, DALL-E:
-            </p>
-            <blockquote
-              className="font-mono text-md text-gray-600 text-left leading-snug font-light
-            bg-white p-4 my-4 rounded-sm max-w-3xl mx-auto w-full"
-            >
-              &gt; "a man wearing a red shirt."
-            </blockquote>
-            <p className="text-lg text-gray-600 text-left leading-snug font-light max-w-2xl mx-auto w-full">
-              This prompt will produce an image, but is it exactly what you had
-              in mind?
-            </p>
-            <br />
-            <div
-              className="rounded-sm overflow-hidden w-max-content mx-auto"
-              style={{ boxShadow: "1px 1px 15px rgba(0,0,0,.45)" }}
-            >
-              <Image src="/images/red-shirt.png" width={300} height={300} />
-            </div>
-            <br />
-            <p className="text-lg text-gray-600 text-left leading-snug font-light max-w-2xl mx-auto w-full">
-              Maybe, but most likely not. If you were to ask the model to
-              produce something closer to your imagination, you would need to be{" "}
-              <span className="font-bold">more specific.</span> Perhaps you
-              could request a certain pose, or a certain background, or a
-              certain facial expression. You could also specify the the{" "}
-              <span className="font-bold">style</span> of the image: is it a
-              painting, a photograph, or a cartoon?
-            </p>
-            <p className="text-lg text-gray-600 text-left leading-snug font-light max-w-2xl mx-auto w-full">
-              Perhaps a better prompt would be:
-            </p>
-            <blockquote
-              className="font-mono text-md text-gray-600 text-left leading-snug font-light
-            bg-white p-4 my-4 rounded-sm max-w-3xl mx-auto w-full"
-            >
-              &gt; "a pencil and crayon image of a happy man wearing a red polo,
-              close up on his face, with a blue background."
-            </blockquote>
-            <p className="text-lg text-gray-600 text-left leading-snug font-light max-w-2xl mx-auto w-full">
-              Depending on what you had envisioned, this was likely much much
-              closer to what you had in mind.
-            </p>
 
-            <div className="image-grid grid grid-cols-2 md:grid-cols-4 gap-2 my-4 w-[max-content] mx-auto">
-              <div className="rounded-sm overflow-hidden shadow-lg">
-                <Image
-                  src="/images/red-shirt-descriptive-1.png"
-                  width={300}
-                  height={300}
-                />
-              </div>
-              <div className="rounded-sm overflow-hidden shadow-lg">
-                <Image
-                  src="/images/red-shirt-descriptive-2.png"
-                  width={300}
-                  height={300}
-                />
-              </div>
-              <div className="rounded-sm overflow-hidden shadow-lg">
-                <Image
-                  src="/images/red-shirt-descriptive-3.png"
-                  width={300}
-                  height={300}
-                />
-              </div>
-              <div className="rounded-sm overflow-hidden shadow-lg">
-                <Image
-                  src="/images/red-shirt-descriptive-4.png"
-                  width={300}
-                  height={300}
-                />
-              </div>
-            </div>
-
-            <p className="text-lg text-gray-600 text-left leading-snug font-light max-w-2xl mx-auto w-full">
-              These details are the crux of prompt engineering. The more
-              specific you are, the more likely the model will produce an image
-              that meets your expectations. And without knowing the details of
-              the model's architecture, it's impossible to know exactly what
-              information it needs to produce a desired output.
-            </p>
-          </div>
-        </div>
         <div className="image-uploader-form">
           <UploadButton
             uploader={uploader}

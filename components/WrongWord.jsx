@@ -9,7 +9,7 @@ export default function WrongWord({ step, children }) {
     <span
       className={classNames(
         "transition duration-300",
-        step === 2 ? "text-red-700" : ""
+        step === 2 ? "text-red-500" : ""
       )}
     >
       {children}

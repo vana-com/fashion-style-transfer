@@ -2,6 +2,54 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import GTSuperDisplay, UntitledSans */
+@font-face {
+  font-family: "GT Super";
+  src: url("/fonts/GTSuperDisplay-Light.woff2");
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: "GT Super";
+  src: url("/fonts/GTSuperDisplay-Regular.woff2");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "GT Super";
+  src: url("/fonts/GTSuperDisplay-Bold.woff2");
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Untitled Sans";
+  src: url("/fonts/UntitledSans-Light.woff2");
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: "Untitled Sans";
+  src: url("/fonts/UntitledSans-Light.woff2");
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: "Untitled Sans";
+  src: url("/fonts/UntitledSans-Regular.woff2");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Untitled Sans";
+  src: url("/fonts/UntitledSans-Bold.woff2");
+  font-weight: 700;
+}
+
+:root {
+  --serif: "GT Super", serif;
+  --sans: ui-sans-serif, "Untitled Sans", sans-serif;
+}
+
 html,
 body {
   height: 100%;
