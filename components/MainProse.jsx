@@ -4,9 +4,9 @@ export default function MainProse() {
   return (
     <div
       className="w-full bg-white z-10"
-      style={{
-        boxShadow: "0px 0px 20px 0px rgba(0,0,0,0.25)",
-      }}
+      // style={{
+      //   boxShadow: "0px 0px 20px 0px rgba(0,0,0,0.25)",
+      // }}
     >
       <div className="flex flex-col gap-2 py-12 px-2">
         <h1 className="font-serif text-5xl font-bold text-center max-w-4xl w-full mx-auto mb-4">
