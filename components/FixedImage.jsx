@@ -56,7 +56,7 @@ export default function FixedImage({ step, src, alt }) {
   }, [step]);
 
   return (
-    <div className="sticky top-0 z-1 h-screen w-screen flex flex-col justify-center items-center">
+    <div className="sticky top-0 z-1 h-screen w-full flex flex-col justify-center items-center">
       <motion.div style={{ y: imageTranslateY, opacity: imageOpacity }} layout>
         <div
           className="rounded-md overflow-hidden"

@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 
 const DEFAULT_PERSON = "Nicolas Cage";
+const BASE_URL = "https://vana-mit-hackathon-1-git-connor-annakaz.vercel.app/"; // 'face-style-transfer.vercel.app/'
 
 const classNames = (...classes) => {
   return classes.filter(Boolean).join(" ");
@@ -21,10 +22,10 @@ const uploader = Uploader({
 const options = { multi: false };
 
 const statusLookup = {
-  succeeded: "has uploaded",
-  failed: "failed to complete",
-  queued: "is loading",
-  processing: "is loading",
+  succeeded: "Your image has uploaded.",
+  failed: "Your image failed to process.",
+  queued: "Your image is uploading.",
+  processing: "Your image is being processed.",
 };
 
 export default function Interactive() {
@@ -48,6 +49,8 @@ export default function Interactive() {
   const prompt = imageCaption
     ? `a portrait of {target_token} in the style of ${imageCaption}`
     : "Prompt not ready";
+  const [hoveredPersonString, setHoveredPersonString] =
+    useState("{target_token}");
 
   // Generating Image State
   const [isLoading, setIsLoading] = useState(false);
@@ -198,7 +201,9 @@ export default function Interactive() {
                 <div
                   className="cursor-pointer hover:scale-105 transition hover:ring-2 hover:ring-offset-2 hover:ring-blue-500 rounded overflow-hidden"
                   key={image}
-                  onClick={() => getImageCaption([{ fileUrl: image }])}
+                  onClick={() =>
+                    getImageCaption([{ fileUrl: `${BASE_URL}/${image}` }])
+                  }
                 >
                   <img
                     src={image}
@@ -221,10 +226,10 @@ export default function Interactive() {
             >
               <div className="flex-1 max-w-[500px] w-full">
                 <h1 className="text-lg font-medium mb-2">
-                  {/* Your uploaded image {statusLookup[prediction?.status]} */}
+                  {/* {statusLookup[prediction?.status]} */}
                   Step 1: Upload an image of someone to merge with
                   <span
-                    className=" bg-stone-200 text-xs text-gray-500 px-2 py-1 rounded cursor-pointer hover:bg-stone-300 transition uppercase ml-2
+                    className=" bg-stone-200 text-xs font-light text-gray-500 px-2 py-1 rounded cursor-pointer hover:bg-stone-300 transition uppercase ml-2
                   "
                     style={{
                       verticalAlign: "middle",
@@ -260,9 +265,11 @@ export default function Interactive() {
                     borderRadius: "0 0 6px 6px",
                   }}
                 >
-                  {prediction &&
-                    prediction.status === "succeeded" &&
-                    imageCaption}
+                  {prediction
+                    ? prediction.status !== "succeeded"
+                      ? statusLookup[prediction.status]
+                      : imageCaption
+                    : ""}
                 </p>
               </div>
               <div
@@ -310,23 +317,32 @@ export default function Interactive() {
                     </div>
                   </>
                 ) : (
-                  <div className="flex flex-col items-center justify-center gap-2">
+                  <div className="flex flex-col gap-2 h-full">
                     {imageCaption && (
-                      <>
+                      <div className="flex flex-col gap-2 h-full justify-center">
                         {/* <label htmlFor="prompt-input">Prompt:</label> */}
-                        <p className="text-left font-medium text-gray-600 mb-2">
+                        <p className="text-left text-lg font-light text-gray-600 mb-px">
                           Generate a portrait using the following prompt:
                         </p>
-                        <p className="text-left font-light text-gray-500 text-md bg-stone-200 px-2 py-1">
+                        <p className="text-left font-light text-gray-500 text-lg  bg-stone-100 px-2 py-1 border border-blue-200">
                           {prediction &&
                             prediction.status === "succeeded" &&
-                            `${prompt}`}
+                            `${prompt.replace(
+                              "{target_token}",
+                              hoveredPersonString
+                            )}`}
                         </p>
                         <div className="flex flex-col gap-1 w-full">
                           <form onSubmit={generateNonPersonalizedImages}>
                             <button
                               className="bg-blue-500 hover:bg-blue-700 transition text-white font-light py-2 px-4 rounded w-full"
                               type="submit"
+                              onMouseOver={() => {
+                                setHoveredPersonString(DEFAULT_PERSON);
+                              }}
+                              onMouseLeave={() => {
+                                setHoveredPersonString("{target_token}");
+                              }}
                             >
                               Create Portrait of {DEFAULT_PERSON}
                             </button>
@@ -346,8 +362,14 @@ export default function Interactive() {
                       disabled:opacity-50 disabled:cursor-not-allowed"
                                   type="submit"
                                   disabled={user?.balance == 0}
+                                  onMouseOver={() => {
+                                    setHoveredPersonString("you");
+                                  }}
+                                  onMouseLeave={() => {
+                                    setHoveredPersonString("{target_token}");
+                                  }}
                                 >
-                                  Create Portrait of Me
+                                  Create Portrait of You
                                 </button>
                               </form>
                               <p
@@ -373,7 +395,7 @@ export default function Interactive() {
                             </p>
                           )}
                         </div>
-                      </>
+                      </div>
                     )}
                   </div>
                 )}

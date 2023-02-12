@@ -2,6 +2,7 @@ import Head from "next/head";
 import Interactive from "components/Interactive";
 import Scrollytelling from "components/Scrollytelling";
 import Hero from "components/Hero";
+import Footer from "components/Footer";
 import { GithubIcon } from "components/icons/GithubIcon";
 
 export default function Home() {
@@ -24,8 +25,8 @@ export default function Home() {
       <main className="main">
         <Hero />
         <Scrollytelling />
-        {/* <h1 className="text-4xl font-bold text-center mt-20">Try it out!</h1> */}
         <Interactive />
+        <Footer />
       </main>
     </>
   );

@@ -7,7 +7,7 @@ import MonaLisaImageSelector from "./MonaLisaImageSelector";
 
 export default function ScrollytellingTwo({ step, setStep }) {
   return (
-    <div className="flex flex-col justify-center items-center z-10 w-full">
+    <div className="flex flex-col justify-center items-center px-0 lg:px-4 z-10 w-full">
       <StepContainer>
         <IntersectionObserver onIntersect={() => setStep(3)}>
           <StepContent centered>

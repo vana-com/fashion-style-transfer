@@ -6,7 +6,7 @@ import ParagraphText from "./ParagraphText";
 
 export default function ScrollytellingOne({ step, setStep }) {
   return (
-    <div className="flex flex-col justify-center items-center z-10 w-full">
+    <div className="flex flex-col justify-center items-center px-0 lg:px-4 z-10 w-full">
       <StepContainer>
         <IntersectionObserver onIntersect={() => setStep(0)}>
           <StepContent centered>
