@@ -67,6 +67,7 @@ export default function ScrollytellingTwo({ step, setStep }) {
           </StepContent>
         </IntersectionObserver>
       </StepContainer>
+      <div className="h-40 w-full bg-transparent" />
     </div>
   );
 }

@@ -236,6 +236,7 @@ export default function Interactive() {
                     }}
                     onClick={() => {
                       setImageUrl(null);
+                      setImageCaption(null);
                     }}
                   >
                     Restart
@@ -323,7 +324,7 @@ export default function Interactive() {
                       isLoading ? "animate-pulse" : ""
                     )}
                   >
-                    {imageCaption && (
+                    {imageCaption && prediction.status == "succeeded" && (
                       <div className="flex flex-col gap-2 h-full justify-center">
                         {/* <label htmlFor="prompt-input">Prompt:</label> */}
                         <p className="text-left text-lg font-light text-gray-600 mb-px">
