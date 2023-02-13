@@ -317,7 +317,12 @@ export default function Interactive() {
                     </div>
                   </>
                 ) : (
-                  <div className="flex flex-col gap-2 h-full">
+                  <div
+                    className={classNames(
+                      "flex flex-col gap-2 h-full",
+                      isLoading ? "animate-pulse" : ""
+                    )}
+                  >
                     {imageCaption && (
                       <div className="flex flex-col gap-2 h-full justify-center">
                         {/* <label htmlFor="prompt-input">Prompt:</label> */}
@@ -384,7 +389,7 @@ export default function Interactive() {
                               </p>
                             </div>
                           )}
-                          {isLoading && <p>Loading...</p>}
+                          {/* {isLoading && <p>Loading...</p>} */}
                           {errorMessage && <p>Error: {errorMessage}</p>}
                           {/* User doesn't have a trained model*/}
                           {user.loggedIn && user.exhibits.length === 0 && (

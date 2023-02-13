@@ -69,20 +69,23 @@ export default function FixedImage({ step, src, alt }) {
       </motion.div>
       <p
         className={classNames(
+          "absolute top-[36.5%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-max bg-black/50 backdrop-filter backdrop-blur-lg p-4 text-white font-light text-md max-w-[500px] text-left leading-snug transition duration-500 ease-in-out w-full",
+          step >= 5 && step < 6 ? "opacity-100" : "opacity-0"
+        )}
+      >
+        <span className="text-lg font-bold">
+          a portrait of <span className="font-serif">Nicolas Cage</span> in the
+          style of...
+        </span>
+      </p>
+      <p
+        className={classNames(
           "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-max bg-black/50 backdrop-filter backdrop-blur-lg p-4 text-white font-light text-md max-w-[500px] text-left leading-snug transition duration-500 ease-in-out w-full",
           step >= 1 && step < 6 ? "opacity-100" : "opacity-0"
         )}
       >
-        {step >= 5 && (
-          <span className="text-lg font-bold">
-            a portrait of <span className="font-serif">Nicolas Cage</span> in
-            the style of...
-            <br />
-          </span>
-        )}
-        <RightWord step={step}>
-          a close up of a painting of a woman
-        </RightWord>, <RightWord step={step}>painting of mona lisa</RightWord>,{" "}
+        <RightWord step={step}>a close up of a painting of a woman</RightWord>,{" "}
+        <RightWord step={step}>painting of mona lisa</RightWord>,{" "}
         <RightWord step={step}>leonardo da vinci painting</RightWord>,{" "}
         <RightWord step={step}>artist leonardo davinci</RightWord>,{" "}
         <RightWord step={step}>mona lisa</RightWord>,{" "}
