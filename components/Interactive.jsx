@@ -354,6 +354,7 @@ export default function Interactive() {
                               onMouseLeave={() => {
                                 setHoveredPersonString("{target_token}");
                               }}
+                              disabled={isLoading}
                             >
                               Create Portrait of {DEFAULT_PERSON}
                             </button>
@@ -372,7 +373,7 @@ export default function Interactive() {
                                   className="bg-blue-500 hover:bg-blue-700 transition text-white font-light py-2 px-4 rounded w-full
                       disabled:opacity-50 disabled:cursor-not-allowed"
                                   type="submit"
-                                  disabled={user?.balance == 0}
+                                  disabled={user?.balance == 0 || isLoading}
                                   onMouseOver={() => {
                                     setHoveredPersonString("you");
                                   }}
