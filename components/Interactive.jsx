@@ -237,6 +237,8 @@ export default function Interactive() {
                     onClick={() => {
                       setImageUrl(null);
                       setImageCaption(null);
+                      setGeneratedImages([]);
+                      setSelectedGeneratedImage(null);
                     }}
                   >
                     Restart
@@ -285,7 +287,10 @@ export default function Interactive() {
                   {/* Your AI-generated face style transfer */}
                   Step 2: Create a portrait of someone else in this style
                 </h1>
-                {generatedImages?.data?.length > 0 ? (
+
+                {imageCaption &&
+                prediction.status == "succeeded" &&
+                generatedImages?.data?.length > 0 ? (
                   <>
                     <img
                       src={
