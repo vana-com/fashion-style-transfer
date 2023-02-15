@@ -78,6 +78,7 @@ export default function Interactive() {
   };
 
   const getImageCaption = async (images) => {
+    if (images.length === 0) return;
     console.log("Running image", images[0].fileUrl);
     setImageUrl(images[0].fileUrl);
     const response = await fetch("/api/predictions", {
@@ -162,19 +163,26 @@ export default function Interactive() {
     setIsLoading(false);
   };
 
-  // FIXME: If these become fixed URLs, they can be used as the default images
   const DEFAULT_IMAGES = [
-    "/images/mona.jpg",
+    "images/mona.jpg",
     "images/rene.jpg",
     "images/vangogh.jpg",
     "images/vertumnus.jpg",
   ];
 
   return (
-    <div className="bg-white min-h-screen py-2 px-4 mx-auto flex flex-col justify-center">
+    <div
+      className="bg-white min-h-screen py-2 px-4 mx-auto flex flex-col justify-center"
+      id="interactive"
+    >
       <h1 className="text-4xl font-bold text-center mb-8">
         Try it out for yourself 👇
       </h1>
+      <h2 className="mx-auto px-4 max-w-[568px] text-xl font-light text-center mb-8">
+        Upload an image of the desired style, or select one from the gallery.
+        Then, create a brand new portrait of yourself (or {DEFAULT_PERSON}) in
+        this style!
+      </h2>
       <div className="image-uploader-form text-center">
         {!imageUrl && (
           <>
@@ -189,12 +197,12 @@ export default function Interactive() {
                   className="bg-blue-500 hover:bg-blue-700 transition text-white font-light py-2 px-4 rounded"
                 >
                   {/* Select image... */}
-                  Upload an image of someone to merge with
+                  Upload an image of the desired style
                 </button>
               )}
             </UploadButton>
             <h2 className="text-md font-light mt-4 text-center mb-2">
-              (or select a default one)
+              (or select one)
             </h2>
             <div className="flex flex-row flex-wrap justify-center gap-2">
               {DEFAULT_IMAGES.map((image) => (
@@ -222,12 +230,13 @@ export default function Interactive() {
           {imageUrl && (
             <motion.div
               layout="position"
-              className="w-full flex flex-col md:flex-row items-center justify-evenly gap-4 md:items-start"
+              className="w-full flex flex-col md:flex-row items-center justify-evenly md:items-start
+              gap-8 md:gap-4"
             >
               <div className="flex-1 max-w-[500px] w-full">
-                <h1 className="text-lg font-medium mb-2">
+                <h1 className="text-lg md:text-base lg:text-lg font-medium mb-2">
                   {/* {statusLookup[prediction?.status]} */}
-                  Step 1: Upload an image of someone to merge with
+                  Step 1: Upload an image of the desired style
                   <span
                     className=" bg-stone-200 text-xs font-light text-gray-500 px-2 py-1 rounded cursor-pointer hover:bg-stone-300 transition uppercase ml-2
                   "
@@ -262,12 +271,7 @@ export default function Interactive() {
                     boxShadow: "0 0 0 1px rgba(0, 0, 0, 0.1)",
                   }}
                 />
-                <p
-                  className="text-left font-light text-gray-500 text-sm bg-stone-200 p-2"
-                  style={{
-                    borderRadius: "0 0 6px 6px",
-                  }}
-                >
+                <p className="mt-2 text-left font-light text-gray-500 text-sm bg-stone-200 p-2 rounded-md">
                   {prediction
                     ? prediction.status !== "succeeded"
                       ? statusLookup[prediction.status]
@@ -283,9 +287,9 @@ export default function Interactive() {
                     : "opacity-25"
                 )}
               >
-                <h1 className="text-lg font-medium mb-2">
+                <h1 className="text-lg md:text-base lg:text-lg font-medium mb-2">
                   {/* Your AI-generated face style transfer */}
-                  Step 2: Create a portrait of someone else in this style
+                  Step 2: Create a portrait of a person in this style
                 </h1>
 
                 {imageCaption &&
@@ -332,16 +336,17 @@ export default function Interactive() {
                     {imageCaption && prediction.status == "succeeded" && (
                       <div className="flex flex-col gap-2 h-full justify-center">
                         {/* <label htmlFor="prompt-input">Prompt:</label> */}
-                        <p className="text-left text-lg font-light text-gray-600 mb-px">
+                        <p className="text-center text-md font-light text-gray-600 mb-px leading-snug">
                           Generate a portrait using the following prompt:
                         </p>
                         <p className="text-left font-light text-gray-500 text-lg  bg-stone-100 px-2 py-1 border border-blue-200">
                           {prediction &&
                             prediction.status === "succeeded" &&
-                            `${prompt.replace(
+                            prompt}
+                          {/* `${prompt.replace(
                               "{target_token}",
                               hoveredPersonString
-                            )}`}
+                            )}`} */}
                         </p>
                         <div className="flex flex-col gap-1 w-full">
                           <form onSubmit={generateNonPersonalizedImages}>

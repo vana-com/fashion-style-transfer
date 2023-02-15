@@ -3,7 +3,7 @@ import { useInView } from "framer-motion";
 
 const IntersectionObserver = ({ children, onIntersect }) => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { threshold: 0.5 });
+  const isInView = useInView(ref, { margin: "0px 0px -50% 0px", amount: 0.5 });
 
   useEffect(() => {
     if (isInView) {

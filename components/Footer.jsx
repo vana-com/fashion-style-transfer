@@ -20,7 +20,7 @@ export default function Footer() {
           href="https://twitter.com/vanahq_"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-gray-700 hover:text-blue-500"
+          className="text-gray-700 hover:text-blue-500 transition"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -36,7 +36,7 @@ export default function Footer() {
           href="https://www.instagram.com/vanahq/"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-gray-700 hover:text-blue-500"
+          className="text-gray-700 hover:text-blue-500 transition"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -52,7 +52,7 @@ export default function Footer() {
           href="https://github.com/corsali"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-gray-700 hover:text-blue-500"
+          className="text-gray-700 hover:text-blue-500 transition"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -52,7 +52,7 @@ export default function MainProse() {
           painting, a photograph, or a cartoon?
         </p>
         <p className="text-lg text-gray-600 text-left leading-snug font-light max-w-xl mx-auto w-full">
-          Perhaps a better prompt would be:
+          A better prompt would be:
         </p>
         <blockquote
           className="font-mono text-md text-gray-600 text-left leading-snug font-light

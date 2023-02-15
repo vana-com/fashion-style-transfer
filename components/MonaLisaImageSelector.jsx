@@ -63,8 +63,8 @@ export default function MonaLisaImageSelector() {
           </svg>
         </button>
       </div>
-      <span className="font-light text-sm text-gray-500 text-right ml-auto block mt-1">
-        You weren't expecting the real Mona Lisa, were you?
+      <span className="font-light text-sm text-gray-500 text-right ml-auto block mt-2">
+        You weren&apos;t expecting the real Mona Lisa, were you?
       </span>
     </div>
   );
