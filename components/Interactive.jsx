@@ -178,10 +178,9 @@ export default function Interactive() {
       <h1 className="text-4xl font-bold text-center mb-8">
         Try it out for yourself 👇
       </h1>
-      <h2 className="mx-auto px-4 max-w-[568px] text-xl font-light text-center mb-8">
-        Upload an image of the desired style, or select one from the gallery.
-        Then, create a brand new portrait of yourself (or {DEFAULT_PERSON}) in
-        this style!
+      <h2 className="mx-auto px-4 max-w-[568px] text-xl font-light text-gray-500 text-center mb-8">
+        Upload an image of your desired style. Then, create a brand new portrait
+        of yourself (or {DEFAULT_PERSON}) in this style!
       </h2>
       <div className="image-uploader-form text-center">
         {!imageUrl && (
@@ -325,6 +324,16 @@ export default function Interactive() {
                         </div>
                       ))}
                     </div>
+                    <p className="text-right font-light text-gray-500 text-sm mt-2">
+                      Get maximum control over your digital self on{" "}
+                      <a
+                        href="https://www.vana.com"
+                        target="_blank"
+                        className="text-blue-500 hover:underline hover:underline-offset-4"
+                      >
+                        Vana.
+                      </a>
+                    </p>
                   </>
                 ) : (
                   <div
