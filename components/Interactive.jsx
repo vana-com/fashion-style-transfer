@@ -16,7 +16,7 @@ const classNames = (...classes) => {
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const uploader = Uploader({
-  apiKey: "free",
+  apiKey: "public_W142hdQGV5Tun9xWKUfwuz8bFo5Q",
 });
 
 const options = { multi: false };
