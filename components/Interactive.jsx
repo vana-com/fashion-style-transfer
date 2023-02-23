@@ -174,6 +174,8 @@ export default function Interactive() {
     "images/vertumnus.jpg",
   ];
 
+  const [agreeToTOS, setAgreeToTOS] = useState(false);
+
   return (
     <div
       className="bg-white min-h-screen py-2 px-4 mx-auto flex flex-col justify-center"
@@ -189,43 +191,72 @@ export default function Interactive() {
       <div className="image-uploader-form text-center">
         {!imageUrl && (
           <>
-            <UploadButton
-              uploader={uploader}
-              options={options}
-              onComplete={getImageCaption}
-            >
-              {({ onClick }) => (
-                <button
-                  onClick={onClick}
-                  className="bg-blue-500 hover:bg-blue-700 transition text-white font-light py-2 px-4 rounded"
-                >
-                  {/* Select image... */}
-                  Upload an image of the desired style
-                </button>
+            <div
+              className={classNames(
+                "transition duration-200",
+                agreeToTOS ? "" : "opacity-50 cursor-not-allowed"
               )}
-            </UploadButton>
-            <h2 className="text-md font-light mt-4 text-center mb-2">
-              (or select one)
-            </h2>
-            <div className="flex flex-row flex-wrap justify-center gap-2">
-              {DEFAULT_IMAGES.map((image) => (
-                <div
-                  className="cursor-pointer hover:scale-105 transition hover:ring-2 hover:ring-offset-2 hover:ring-blue-500 rounded overflow-hidden"
-                  key={image}
-                  onClick={() =>
-                    getImageCaption([{ fileUrl: `${BASE_URL}/${image}` }])
-                  }
-                >
-                  <img
-                    src={image}
-                    alt="Default Image"
-                    className="w-32 h-32 object-cover"
-                    style={{
-                      boxShadow: "0 0 0 1px rgba(0, 0, 0, 0.1)",
+            >
+              <UploadButton
+                uploader={uploader}
+                options={options}
+                onComplete={getImageCaption}
+              >
+                {({ onClick }) => (
+                  <button
+                    onClick={onClick}
+                    disabled={!agreeToTOS}
+                    className="bg-blue-500 hover:bg-blue-700 transition text-white font-light py-2 px-4 rounded"
+                  >
+                    {/* Select image... */}
+                    Upload an image of the desired style
+                  </button>
+                )}
+              </UploadButton>
+              <h2 className="text-md font-light mt-4 text-center mb-2">
+                (or select one)
+              </h2>
+              <div className="flex flex-row flex-wrap justify-center gap-2">
+                {DEFAULT_IMAGES.map((image) => (
+                  <div
+                    className="cursor-pointer hover:scale-105 transition hover:ring-2 hover:ring-offset-2 hover:ring-blue-500 rounded overflow-hidden"
+                    key={image}
+                    onClick={() => {
+                      if (!agreeToTOS) return;
+                      getImageCaption([{ fileUrl: `${BASE_URL}/${image}` }]);
                     }}
-                  />
-                </div>
-              ))}
+                  >
+                    <img
+                      src={image}
+                      alt="Default Image"
+                      className="w-32 h-32 object-cover"
+                      style={{
+                        boxShadow: "0 0 0 1px rgba(0, 0, 0, 0.1)",
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="flex flex-row gap-1 mt-3 justify-center">
+              <input
+                type="checkbox"
+                checked={agreeToTOS}
+                onChange={(e) => {
+                  setAgreeToTOS(e.target.checked);
+                }}
+              />
+              <p className="text-sm font-light text-gray-500">
+                I agree to the{" "}
+                <a
+                  href="https://www.vana.com/terms-of-service"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="text-blue-500 hover:underline hover:underline-offset-4"
+                >
+                  Vana Terms of Service
+                </a>
+              </p>
             </div>
           </>
         )}
@@ -241,7 +272,7 @@ export default function Interactive() {
                   {/* {statusLookup[prediction?.status]} */}
                   Step 1: Upload an image of the desired style
                   <span
-                    className="bg-stone-200 text-stone-700 text-xs font-medium rounded-md px-2 py-1 ml-2 cursor-pointer hover:bg-stone-300"
+                    className="bg-stone-200 text-stone-700 text-sm font-medium rounded-md px-2 py-1 ml-2 cursor-pointer hover:bg-stone-300"
                     style={{
                       verticalAlign: "middle",
                     }}
@@ -360,6 +391,7 @@ export default function Interactive() {
                               hoveredPersonString
                             )}`} */}
                         </p>
+
                         <div className="flex flex-col gap-1 w-full">
                           <form onSubmit={generateNonPersonalizedImages}>
                             <button
@@ -401,6 +433,7 @@ export default function Interactive() {
                                   Create Portrait of You (4 credits)
                                 </button>
                               </form>
+                              {/* Agree to TOS */}
                               <p
                                 className={classNames(
                                   "mt-px text-right font-light text-gray-500 text-sm",

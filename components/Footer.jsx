@@ -2,8 +2,8 @@ import React from "react";
 
 export default function Footer() {
   return (
-    <footer className="w-full min-h-48 py-12 bg-stone-200 flex flex-col justify-center items-center">
-      <p className="px-2 text-center mb-6 text-gray-700 text-xl font-light">
+    <footer className="w-full min-h-48 py-12 bg-stone-200 flex flex-col gap-6 justify-center items-center">
+      <p className="px-2 text-center text-gray-700 text-xl font-light">
         Learn more about AI, the digital self, and your VNA at{" "}
         <a
           href="https://www.vana.com"
@@ -15,6 +15,26 @@ export default function Footer() {
         </a>
         .
       </p>
+      {/* Privacy Policy and Terms of Service */}
+      <div className="flex flex-row justify-center items-center gap-4">
+        <a
+          href="https://www.vana.com/terms-of-service"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-gray-500 font-light hover:text-blue-500 transition"
+        >
+          Terms of Service
+        </a>
+        <a
+          href="https://www.vana.com/privacy-policy"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-gray-500 font-light hover:text-blue-500 transition"
+        >
+          Privacy Policy
+        </a>
+      </div>
+
       <div className="flex flex-row justify-center items-center gap-4">
         <a
           href="https://twitter.com/vanahq_"
