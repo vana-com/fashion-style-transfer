@@ -238,25 +238,26 @@ export default function Interactive() {
                 ))}
               </div>
             </div>
-            <div className="flex flex-row gap-1 mt-3 justify-center">
-              <input
-                type="checkbox"
-                checked={agreeToTOS}
-                onChange={(e) => {
-                  setAgreeToTOS(e.target.checked);
-                }}
-              />
-              <p className="text-sm font-light text-gray-500">
+            <div className="flex flex-row gap-1 mt-6 justify-center">
+              <label className="text-md font-light text-gray-500 cursor-pointer select-none flex items-center">
+                <input
+                  type="checkbox"
+                  checked={agreeToTOS}
+                  onChange={(e) => {
+                    setAgreeToTOS(e.target.checked);
+                  }}
+                  className="mr-2 cursor-pointer"
+                />
                 I agree to the{" "}
                 <a
                   href="https://www.vana.com/terms-of-service"
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="text-blue-500 hover:underline hover:underline-offset-4"
+                  className="ml-1 text-blue-500 hover:underline hover:underline-offset-4"
                 >
                   Vana Terms of Service
                 </a>
-              </p>
+              </label>
             </div>
           </>
         )}
