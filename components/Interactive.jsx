@@ -47,7 +47,11 @@ export default function Interactive() {
   const [imageUrl, setImageUrl] = useState(null);
   const [imageCaption, setImageCaption] = useState("");
   const prompt = imageCaption
-    ? `a portrait of {target_token} in the style of ${imageCaption}`
+    ? `a portrait of [your subject] in the style of ${imageCaption
+        .replaceAll(" woman ", " person ")
+        .replaceAll(" man ", " person ")
+        .replaceAll(" his ", " their ")
+        .replaceAll(" her ", " their ")}`
     : "Prompt not ready";
   const [hoveredPersonString, setHoveredPersonString] =
     useState("{target_token}");
@@ -237,8 +241,7 @@ export default function Interactive() {
                   {/* {statusLookup[prediction?.status]} */}
                   Step 1: Upload an image of the desired style
                   <span
-                    className=" bg-stone-200 text-xs font-light text-gray-500 px-2 py-1 rounded cursor-pointer hover:bg-stone-300 transition uppercase ml-2
-                  "
+                    className="bg-stone-200 text-stone-700 text-xs font-medium rounded-md px-2 py-1 ml-2 cursor-pointer hover:bg-stone-300"
                     style={{
                       verticalAlign: "middle",
                     }}
@@ -395,7 +398,7 @@ export default function Interactive() {
                                     setHoveredPersonString("{target_token}");
                                   }}
                                 >
-                                  Create Portrait of You
+                                  Create Portrait of You (4 credits)
                                 </button>
                               </form>
                               <p

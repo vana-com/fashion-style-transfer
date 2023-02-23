@@ -62,7 +62,7 @@ export default function ScrollytellingTwo({ step, setStep }) {
         <IntersectionObserver onIntersect={() => setStep(6)}>
           <StepContent>
             <ParagraphText>
-              The result is a glorious mix of Mona Lisa and the target token (in
+              The result is a glorious mix of Mona Lisa and the new subject (in
               our case, Nicolas Cage).
             </ParagraphText>
           </StepContent>

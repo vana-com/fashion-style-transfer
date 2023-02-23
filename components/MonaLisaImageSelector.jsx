@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Image from "next/image";
 
+const classNames = (...classes) => classes.filter(Boolean).join(" ");
+
 export default function MonaLisaImageSelector() {
   const [number, setNumber] = useState(1);
 
@@ -12,7 +14,17 @@ export default function MonaLisaImageSelector() {
           boxShadow: "1px 1px 20px rgba(0,0,0,.3)",
         }}
       >
-        <Image src={`/images/mona-lisa-dalle-${number}.png`} fill />
+        {[1, 2, 3, 4].map((n) => (
+          <Image
+            src={`/images/mona-lisa-dalle-${n}.png`}
+            fill
+            className={classNames(
+              number === n ? "opacity-100" : "opacity-0",
+              "transition duration-200 ease-in-out"
+            )}
+          />
+        ))}
+
         {/* Back and forward buttons */}
         <button
           className="absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-1/2
