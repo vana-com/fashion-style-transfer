@@ -47,19 +47,28 @@ export default function Interactive() {
   const [imageUrl, setImageUrl] = useState(null);
   const [imageCaption, setImageCaption] = useState("");
 
+  const removeGenderTokens = (str) => {
+    return str
+      .replaceAll(" woman ", " person ")
+      .replaceAll(" woman, ", " person, ")
+      .replaceAll(" man ", " person ")
+      .replaceAll(" man, ", " person, ")
+      .replaceAll(" his ", " their ")
+      .replaceAll(" her ", " their ")
+      .replaceAll(" boy ", " person ")
+      .replaceAll(" boy, ", " person ")
+      .replaceAll(" girl ", " person ")
+      .replaceAll(" girl, ", " person, ")
+      .replaceAll(" woman's ", " person's ")
+      .replaceAll(" man's ", " person's ")
+      .replaceAll(" boy's ", " person's ")
+      .replaceAll(" girl's ", " person's ");
+  };
+
   const prompt = useMemo(() => {
     if (imageCaption) {
-      return `a portrait of [your subject] in the style of ${imageCaption
-        .replaceAll(" woman ", " person ")
-        .replaceAll(" man ", " person ")
-        .replaceAll(" his ", " their ")
-        .replaceAll(" her ", " their ")
-        .replaceAll(" boy ", " person ")
-        .replaceAll(" girl ", " person ")
-        .replaceAll(" woman's ", " person's ")
-        .replaceAll(" man's ", " person's ")
-        .replaceAll(" boy's ", " person's ")
-        .replaceAll(" girl's ", " person's ")}`;
+      return `a portrait of [your subject] in the style of 
+      ${removeGenderTokens(imageCaption)}`;
     } else {
       return "Prompt not ready";
     }
@@ -321,7 +330,7 @@ export default function Interactive() {
                   {prediction
                     ? prediction.status !== "succeeded"
                       ? statusLookup[prediction.status]
-                      : imageCaption
+                      : removeGenderTokens(imageCaption)
                     : ""}
                 </p>
               </div>
