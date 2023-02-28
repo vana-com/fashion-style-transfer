@@ -14,14 +14,14 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <header className="fixed top-0 right-0 p-3">
+      {/* <header className="fixed top-0 right-0 p-3">
         <a
           href="https://github.com/annakaz/face-style-transfer"
           target="_blank"
         >
           <GithubIcon />
         </a>
-      </header>
+      </header> */}
       <main className="main">
         <Hero />
         <Scrollytelling />

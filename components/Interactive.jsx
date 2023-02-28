@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { vanaApiPost } from "vanaApi";
 import { LoginHandler } from "components/auth/LoginHandler";
 import { Uploader } from "uploader";
@@ -46,13 +46,25 @@ export default function Interactive() {
   // Image Caption State
   const [imageUrl, setImageUrl] = useState(null);
   const [imageCaption, setImageCaption] = useState("");
-  const prompt = imageCaption
-    ? `a portrait of [your subject] in the style of ${imageCaption
+
+  const prompt = useMemo(() => {
+    if (imageCaption) {
+      return `a portrait of [your subject] in the style of ${imageCaption
         .replaceAll(" woman ", " person ")
         .replaceAll(" man ", " person ")
         .replaceAll(" his ", " their ")
-        .replaceAll(" her ", " their ")}`
-    : "Prompt not ready";
+        .replaceAll(" her ", " their ")
+        .replaceAll(" boy ", " person ")
+        .replaceAll(" girl ", " person ")
+        .replaceAll(" woman's ", " person's ")
+        .replaceAll(" man's ", " person's ")
+        .replaceAll(" boy's ", " person's ")
+        .replaceAll(" girl's ", " person's ")}`;
+    } else {
+      return "Prompt not ready";
+    }
+  }, [imageCaption]);
+
   const [hoveredPersonString, setHoveredPersonString] =
     useState("{target_token}");
 
