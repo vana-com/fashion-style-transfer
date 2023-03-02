@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 
 const DEFAULT_PERSON = "Nicolas Cage";
-const BASE_URL = "https://vana-mit-hackathon-1-git-connor-annakaz.vercel.app/"; // 'face-style-transfer.vercel.app/'
+const BASE_URL = "https://face-style-transfer.vercel.app/"; // 'face-style-transfer.vercel.app/'
 
 const classNames = (...classes) => {
   return classes.filter(Boolean).join(" ");
@@ -48,6 +48,7 @@ export default function Interactive() {
   const [imageCaption, setImageCaption] = useState("");
 
   const removeGenderTokens = (str) => {
+    if (!str) return "";
     return str
       .replaceAll(" woman ", " person ")
       .replaceAll(" woman, ", " person, ")

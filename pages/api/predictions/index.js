@@ -1,5 +1,6 @@
 export default async function handler(req, res) {
   const response = await fetch(
+    // https://replicate.com/pharmapsychotic/clip-interrogator
     "https://replicate.com/api/models/pharmapsychotic/clip-interrogator/versions/a4a8bafd6089e1716b06057c42b19378250d008b80fe87caa5cd36d40c1eda90/predictions",
     {
       method: "POST",
