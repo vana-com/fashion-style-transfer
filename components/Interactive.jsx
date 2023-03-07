@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { vanaApiPost } from "vanaApi";
 import { LoginHandler } from "components/auth/LoginHandler";
 import { Uploader } from "uploader";
@@ -38,7 +38,6 @@ export default function Interactive() {
   });
 
   const [prediction, setPrediction] = useState(null);
-  const [error, setError] = useState(null);
 
   // Which generated image is previewed
   const [selectedGeneratedImage, setSelectedGeneratedImage] = useState(null);
@@ -68,15 +67,13 @@ export default function Interactive() {
 
   const prompt = useMemo(() => {
     if (imageCaption) {
-      return `a portrait of [your subject] in the style of 
-      ${removeGenderTokens(imageCaption)}`;
+      return `a portrait of [your subject] in the style of ${removeGenderTokens(
+        imageCaption
+      )}`;
     } else {
       return "Prompt not ready";
     }
   }, [imageCaption]);
-
-  const [hoveredPersonString, setHoveredPersonString] =
-    useState("{target_token}");
 
   // Generating Image State
   const [isLoading, setIsLoading] = useState(false);
@@ -88,16 +85,22 @@ export default function Interactive() {
     setIsLoading(true);
     setErrorMessage("");
 
+    const targetTokenPrompt = prompt
+      .replace(/\[your subject]/g, "{target_token}")
+      .replaceAll("\n", " ")
+      .trim();
+
     try {
       console.log("About to call API");
       const urls = await vanaApiPost(`images/generations`, {
-        prompt: prompt,
+        prompt: targetTokenPrompt,
         n: 4,
       });
       console.log("urls", urls);
       setGeneratedImages(urls);
     } catch (error) {
       setErrorMessage("An error occurred while generating the image");
+      setIsLoading(false);
     }
 
     setIsLoading(false);
@@ -126,7 +129,8 @@ export default function Interactive() {
     setPrediction(multi);
     const predictionId = multi.uuid;
     if (response.status !== 201) {
-      setError(multi.detail);
+      setErrorMessage(multi.detail);
+      setIsLoading(false);
       return;
     }
     while (multi.status !== "succeeded" && multi.status !== "failed") {
@@ -135,7 +139,8 @@ export default function Interactive() {
       const { prediction } = await response.json();
       multi = prediction;
       if (response.status !== 200) {
-        setError(multi.detail);
+        setErrorMessage(multi.detail);
+        setIsLoading(false);
         return;
       }
       setPrediction(prediction);
@@ -144,50 +149,54 @@ export default function Interactive() {
     setImageCaption(multi.output);
   };
 
-  const generateNonPersonalizedImages = async (event) => {
-    event.preventDefault();
-    setIsLoading(true);
-    setErrorMessage("");
+  const generateNonPersonalizedImages = useCallback(
+    async (event) => {
+      event.preventDefault();
+      setIsLoading(true);
+      setErrorMessage("");
 
-    const defaultPersonPrompt = prompt.replace(
-      /\{target_token}/g,
-      DEFAULT_PERSON
-    );
-    const response = await fetch("/api/stable-diffusion", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        inputs: {
-          prompt: defaultPersonPrompt,
-          num_outputs: 4,
+      const defaultPersonPrompt = prompt
+        .replace(/\[your subject]/g, DEFAULT_PERSON)
+        .replaceAll("\n", " ")
+        .trim();
+
+      const response = await fetch("/api/stable-diffusion", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      }),
-    });
+        body: JSON.stringify({
+          inputs: {
+            prompt: defaultPersonPrompt,
+            num_outputs: 4,
+          },
+        }),
+      });
 
-    let multi = await response.json();
-    const predictionId = multi.uuid;
-    if (response.status !== 201) {
-      setError(multi.detail);
-      return;
-    }
-    while (multi.status !== "succeeded" && multi.status !== "failed") {
-      await sleep(1000);
-      const response = await fetch("/api/stable-diffusion/" + predictionId);
-      const { prediction } = await response.json();
-      multi = prediction;
-      if (response.status !== 200) {
+      let multi = await response.json();
+      const predictionId = multi.uuid;
+      if (response.status !== 201) {
         setError(multi.detail);
         return;
       }
-    }
-    const formattedUrls = {
-      data: multi.output.map((imageUrl) => ({ url: imageUrl })),
-    };
-    setGeneratedImages(formattedUrls);
-    setIsLoading(false);
-  };
+      while (multi.status !== "succeeded" && multi.status !== "failed") {
+        await sleep(1000);
+        const response = await fetch("/api/stable-diffusion/" + predictionId);
+        const { prediction } = await response.json();
+        multi = prediction;
+        if (response.status !== 200) {
+          setError(multi.detail);
+          return;
+        }
+      }
+      const formattedUrls = {
+        data: multi.output.map((imageUrl) => ({ url: imageUrl })),
+      };
+      setGeneratedImages(formattedUrls);
+      setIsLoading(false);
+    },
+    [prompt]
+  );
 
   const DEFAULT_IMAGES = [
     "images/mona.jpg",
@@ -304,6 +313,7 @@ export default function Interactive() {
                       setImageCaption(null);
                       setGeneratedImages([]);
                       setSelectedGeneratedImage(null);
+                      setIsLoading(false);
                     }}
                   >
                     Restart
@@ -318,7 +328,7 @@ export default function Interactive() {
                     prediction
                       ? prediction.status == "failed"
                         ? "opacity-50"
-                        : prediction.status !== "succeeded"
+                        : prediction.status !== "succeeded" && isLoading
                         ? "animate-pulse"
                         : ""
                       : ""
@@ -333,6 +343,8 @@ export default function Interactive() {
                       ? statusLookup[prediction.status]
                       : removeGenderTokens(imageCaption)
                     : ""}
+
+                  {errorMessage && `Error: ${errorMessage}`}
                 </p>
               </div>
               <div
@@ -420,12 +432,6 @@ export default function Interactive() {
                             <button
                               className="bg-blue-500 hover:bg-blue-700 transition text-white font-light py-2 px-4 rounded w-full"
                               type="submit"
-                              onMouseOver={() => {
-                                setHoveredPersonString(DEFAULT_PERSON);
-                              }}
-                              onMouseLeave={() => {
-                                setHoveredPersonString("{target_token}");
-                              }}
                               disabled={isLoading}
                             >
                               Create Portrait of {DEFAULT_PERSON}
@@ -446,12 +452,6 @@ export default function Interactive() {
                       disabled:opacity-50 disabled:cursor-not-allowed"
                                   type="submit"
                                   disabled={user?.balance == 0 || isLoading}
-                                  onMouseOver={() => {
-                                    setHoveredPersonString("you");
-                                  }}
-                                  onMouseLeave={() => {
-                                    setHoveredPersonString("{target_token}");
-                                  }}
                                 >
                                   Create Portrait of You (4 credits)
                                 </button>
