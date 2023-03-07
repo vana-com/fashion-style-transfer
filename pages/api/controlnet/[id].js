@@ -2,7 +2,8 @@ const API_HOST = "https://api.replicate.com";
 
 export default async function handler(req, res) {
   const response = await fetch(
-    "https://replicate.com/api/models/stability-ai/stable-diffusion/versions/5b703f0fa41880f918ab1b12c88a25b468c18639be17515259fb66a83f4ad0a4/predictions/" +
+    // "https://replicate.com/api/models/daanelson/attend-and-excite/versions/27a10b28879cb5add1793709ff9ee8806712b756ab5fdc9542fce67a1cd04b3a/predictions/" +
+    "https://replicate.com/api/models/jagilley/controlnet/versions/8ebda4c70b3ea2a2bf86e44595afb562a2cdf85525c620f1671a78113c9f325b/predictions/" +
       req.query.id,
     {
       headers: {
