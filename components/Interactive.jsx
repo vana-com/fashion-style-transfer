@@ -511,7 +511,7 @@ export default function Interactive() {
                           {user.loggedIn && user.exhibits.length === 0 && (
                             <p className="text-center text-sm font-light text-gray-600 mt-2 leading-snug">
                               Unfortunately, you haven't created a personalized
-                              Vana Portrait model yet. Go to
+                              Vana Portrait model yet. Go to{" "}
                               <a
                                 href="https://portrait.vana.com/create"
                                 target="_blank"
