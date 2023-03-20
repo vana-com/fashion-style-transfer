@@ -23,8 +23,7 @@ export default function Home() {
         </a>
       </header> */}
       <main className="main">
-        <Hero />
-        <Scrollytelling />
+        {/* <Hero /> */}
         <Interactive />
         <Footer />
       </main>

@@ -245,11 +245,11 @@ export default function Interactive() {
       id="interactive"
     >
       <h1 className="text-4xl font-bold text-center mb-8">
-        Try it out for yourself 👇
+        Try on an outfit virtually 👗
       </h1>
       <h2 className="mx-auto px-4 max-w-[568px] text-xl font-light text-gray-500 text-center mb-8">
-        Upload an image of your desired style. Then, create a brand new portrait
-        of yourself (or {DEFAULT_PERSON}) in this style!
+        Upload an image of your desired outfit. Then, try the outfit on virtually on you
+        (or {DEFAULT_PERSON})!
       </h2>
       {/* <LoginHandler setUser={setUser} />
       <button onClick={generatePersonalizedImages}>test</button> */}
@@ -274,7 +274,7 @@ export default function Interactive() {
                     className="bg-blue-500 hover:bg-blue-700 transition text-white font-light py-2 px-4 rounded"
                   >
                     {/* Select image... */}
-                    Upload an image of the desired style
+                    Upload an image of the desired outfit
                   </button>
                 )}
               </UploadButton>
@@ -336,7 +336,7 @@ export default function Interactive() {
               <div className="flex-1 max-w-[500px] w-full">
                 <h1 className="text-lg md:text-base lg:text-lg font-medium mb-2">
                   {/* {statusLookup[prediction?.status]} */}
-                  Step 1: Upload an image of the desired style
+                  Step 1: Upload an image of the desired outfit
                   <span
                     className="bg-stone-200 text-stone-700 text-sm font-medium rounded-md px-2 py-1 ml-2 cursor-pointer hover:bg-stone-300"
                     style={{
@@ -391,7 +391,7 @@ export default function Interactive() {
               >
                 <h1 className="text-lg md:text-base lg:text-lg font-medium mb-2">
                   {/* Your AI-generated face style transfer */}
-                  Step 2: Create a portrait of a person in this style
+                  Step 2: See if you like it on yourself
                 </h1>
 
                 {imageCaption &&

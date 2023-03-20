@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Hero() {
   return (
-    <div className="h-[90vh] flex flex-col justify-center items-center bg-white">
+    <div className="h-[20vh] flex flex-col justify-center items-center bg-white">
       <h1 className="font-serif text-5xl md:text-7xl font-bold text-center max-w-4xl mb-4 px-8">
         A Visual Introduction to Prompt Engineering
       </h1>
