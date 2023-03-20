@@ -33,7 +33,6 @@ export default function Interactive() {
   const [user, setUser] = useState({
     balance: 0,
     exhibits: [],
-    textToImage: [],
     loggedIn: false,
   });
 
@@ -97,13 +96,14 @@ export default function Interactive() {
       // console.log("About to call API");
       const account = await vanaApiGet("account");
 
-      // Before running generations/images, we need need to train a new LoRA model using the POST personalizations/images endpoint
       if (account.success) {
         // Once the model is trained, we can run generations/images
-        const generations = await vanaApiPost("generations/images", {
-          exhibitName: "Learn Prompt Engineering",
-          prompt: targetTokenPrompt, // "A watercolor painting of <1>",
-        });
+        const generations = await vanaApiPost(
+          "generations/images?exhibitName=Learn Prompt Engineering&maxImagesPerExhibit=4",
+          {
+            prompt: targetTokenPrompt, // "A watercolor painting of <1>",
+          }
+        );
         // console.log("generations", generations);
 
         // Polling for the status of the generation job
